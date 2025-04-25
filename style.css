@@ -112,6 +112,12 @@ button.active {
     color: #fff;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .right-input,
 .left-input {
     width: 100%;
@@ -140,6 +146,7 @@ button.active {
 }
 
 .hamburger-wrapper {
+    display: none;
     position: absolute;
     top: 50px;
     right: -250px;
@@ -147,6 +154,7 @@ button.active {
     min-height: 100vh;
     transition: right 0.5s ease;
 }
+
 
 #hamburger-list {
     display: flex;
@@ -167,17 +175,16 @@ button.active {
 
 .error-wrapper {
     position: fixed;
-    top: 0;
+    top: 15%;
     left: 0;
     width: 100%;
-    background-color: #ff4d4d;
+    background-color: #bf0d0d;
     color: #ffffff;
     text-align: center;
-    padding: 10px;
-    font-size: 16px;
+    padding: 5px;
+    font-size: 20px;
     font-weight: bold;
     font-family: Arial, sans-serif;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     display: none;
 }
