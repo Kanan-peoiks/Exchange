@@ -166,6 +166,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .hamburger-wrapper.activee {
+    display: block;
     right: 0px;
 }
 

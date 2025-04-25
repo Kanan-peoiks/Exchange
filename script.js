@@ -67,36 +67,64 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     leftInput.addEventListener('input', (e) => {
         activeInput = "left";
-        if (e.target.value.includes(',')) {
-            e.target.value = e.target.value.replace(',', '.');
+        let inputValue = e.target.value;
+
+
+        inputValue = inputValue.replace(/[^0-9.,]/g, '');
+
+        let calculationValue = inputValue.replace(/,/g, '.');
+    
+        
+        const commaCount = (inputValue.match(/,/g) || []).length;
+        if (commaCount > 1) {
+            calculationValue = calculationValue.replace(/,(?=.*,)/g, '');
         }
-        if (e.target.value === '0' || /^0{2,}$/.test(e.target.value)) {
-            e.target.value = '0';
+
+
+        if (calculationValue === '0' || /^0{2,}$/.test(calculationValue)) {
+            calculationValue = '0';
         }
-        const calculatedValue = (parseFloat(e.target.value) * leftRate).toFixed(5);
+
+
+        const calculatedValue = (parseFloat(calculationValue) * leftRate).toFixed(5);
         if (!isNaN(calculatedValue)) {
             rightInput.value = calculatedValue;
         } else {
             rightInput.value = "";
         }
+
+        e.target.value = inputValue.replace(/\,/g, ".");
     });
 
     rightInput.addEventListener('input', (e) => {
         activeInput = "right";
-        if (e.target.value.includes(',')) {
-            e.target.value = e.target.value.replace(',', '.');
+        let inputValue = e.target.value;
+
+        inputValue = inputValue.replace(/[^0-9.,]/g, '');
+
+        let calculationValue = inputValue.replace(/./g, ',');
+
+        const commaCount = (inputValue.match(/,/g) || []).length;
+        if (commaCount > 1) {
+            calculationValue = calculationValue.replace(/.(?=,*,)/g, '');
         }
 
-        if (e.target.value === '0' || /^0{2,}$/.test(e.target.value)) {
-            e.target.value = '0';
+        if (calculationValue === '0' || /^0{2,}$/.test(calculationValue)) {
+            calculationValue = '0';
         }
-        const calculatedValue = (parseFloat(e.target.value) * rightRate).toFixed(5);
+
+
+        const calculatedValue = (parseFloat(calculationValue) * rightRate).toFixed(5);
         if (!isNaN(calculatedValue)) {
             leftInput.value = calculatedValue;
         } else {
             leftInput.value = "";
         }
+
+
+        e.target.value = inputValue.replace(/\,/g, ".");
     });
+
 
     async function updateFooters() {
         const leftActive = document.querySelector('.left-buttons > button.active');
@@ -106,14 +134,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const leftCurrency = leftActive.textContent.trim();
             const rightCurrency = rightActive.textContent.trim();
 
-            // Əgər valyutalar eynidirsə, həmişə işləsin
+
             if (leftCurrency === rightCurrency) {
                 leftRate = 1;
                 rightRate = 1;
                 leftFooterWrapper.innerText = `1 ${leftCurrency} = 1 ${rightCurrency}`;
                 rightFooterWrapper.innerText = `1 ${rightCurrency} = 1 ${leftCurrency}`;
 
-                // Offline olsa belə, input dəyərlərini sinxron saxla
                 if (activeInput === "left") {
                     rightInput.value = leftInput.value;
                 } else {
@@ -123,7 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            // Valyutalar fərqlidir, ancaq online deyilsə, sorğu atma
+
             if (!navigator.onLine) {
                 alert("İnternet bağlantısı yoxdur!");
                 leftFooterWrapper.innerText = 'İnternet bağlantısı yoxdur';
@@ -131,7 +158,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            // Valyutalar fərqlidir və internet var — API çağırışı
+
             const url = `https://v6.exchangerate-api.com/v6/${API_KEY}/pair/${leftCurrency}/${rightCurrency}`;
             try {
                 const response = await fetch(url);
